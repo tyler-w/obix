@@ -23,31 +23,39 @@
 
 #include <libxml2/libxml/tree.h>
 
+const char *OBIX_MODULE_FUNC_START = "obix_module_start";
+const char *OBIX_MODULE_FUNC_FINISH = "obix_module_finish";
+
+struct obix_module_operations;
+
 /**
  * Structure containing a dynamic oBIX module.
  */
 struct obix_module {
+	char *module_path;
 	char *module_config_path;
 	xmlNode *module_config;
-	obix_module_operations *funcs;
+	struct obix_module_operations *funcs;
 	void *_private;
-	void *_handle;
+	void *_dlhandle;
 };
+
 
 /**
  * Structure containing function pointers to the implementations inside the dynamically
  * loaded modules.
  */
 struct obix_module_operations {
-	int (*obix_module_init)(struct obix_module *module);
-	void (*obix_server_destroy)(struct obix_module *module);
+	void (*obix_module_destroy)(struct obix_module *module);
 	
-	int (*obix_server_read)(struct obix_module *module);
-	int (*obix_server_write)(struct obix_module *module, const char *uri);
-	int (*obix_server_invoke)(struct obix_module *module, const char *uri, const xmlNode *params);
+	int (*obix_server_read)(const struct obix_module *module, const char *uri);
+	int (*obix_server_write)(const struct obix_module *module, const char *uri, const xmlNode *params);
+	int (*obix_server_invoke)(const struct obix_module *module, const char *uri, const xmlNode *params);
 };
 
 int obix_module_load(const char *lib_path, const char *conf_path, struct obix_module **out_module);
 int obix_module_unload(struct obix_module *module);
+
+typedef int (*obix_module_main_t)(struct obix_module *); 
 
 #endif

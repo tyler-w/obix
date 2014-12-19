@@ -3,8 +3,10 @@ ADD_SUBDIRECTORY(libs libs)
 ADD_SUBDIRECTORY(server server)
 ADD_SUBDIRECTORY(client client)
 ADD_SUBDIRECTORY(adaptors adaptors)
+ADD_SUBDIRECTORY(modules modules)
 
 # Dummy binary to keep rpmlint from complaining about obix rpm having no binary.
 ADD_EXECUTABLE(obix-echo obix-echo.c)
 INSTALL(TARGETS obix-echo DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+
 

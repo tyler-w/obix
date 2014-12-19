@@ -29,6 +29,7 @@
 #include "xml_config.h"
 #include "obix_utils.h"
 #include "xml_utils.h"
+#include "module.h"
 
 #undef DEBUG_CACHE
 
@@ -64,6 +65,8 @@ static const char *HTTP_STATUS_OK =
 static const char *HTTP_CONTENT_LOCATION = "Content-Location: %s\r\n";
 static const char *HTTP_CONTENT_LENGTH = "Content-Length: %lu\r\n";
 static const char *HTTP_HEADER_SEPARATOR = "\r\n";
+
+static struct obix_module *modules[10] = {};
 
 /*
  * Decodes a URL-Encoded string.
@@ -437,6 +440,13 @@ int main(int argc, char **argv)
 		goto log_failed;
 	}
 
+	struct obix_module *testModule;
+	if (obix_module_load("/home/tw/src/obix/build/modules/libmod_obix_test.so", "", &testModule) < 0) {
+		log_error("load test failed.");
+	}
+	
+	modules[0] = testModule;
+	
 	payload();
 
 	obix_fcgi_exit();
