@@ -143,6 +143,21 @@ void obix_server_remove_meta(xmlNode *obixObject);
  */
 void obix_server_reply_object(obix_request_t *request, xmlNode *obixObject);
 
+/**
+ * Adds a device contract to the oBIX global DOM tree at the specified href.
+ * 
+ * (see @a handlerSignUp)
+ * 
+ * @param	deviceContract	A pointer to an xmlNode containing a valid oBIX device contract
+ * @param	out_node		Address of the signed-up device contract if the operation suceeds
+ * @param	href			String pointing to the URI location of the device
+ * @param	privileged		1 if the insert is in privileged mode, 0 otherwise
+ * 
+ * @returns					0 if the operation succeeded, a value < 0 otherwise
+ */
+int obix_server_device_add(xmlNode *deviceContract, xmlNode **out_node,
+							xmlChar *href, int privileged);
+
 xmlNode *handlerError(obix_request_t *request, const char *overrideUri, xmlNode *input);
 xmlNode *handlerSignUp(obix_request_t *request, const char *overrideUri, xmlNode *input);
 
@@ -153,5 +168,7 @@ typedef struct err_msg {
 	const char *type;
 	const char *msgs;
 } err_msg_t;
+
+err_msg_t obix_server_error_msg(int err_id);
 
 #endif /* OBIX_SERVER_H_ */

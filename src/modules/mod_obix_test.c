@@ -23,8 +23,15 @@
 #include "xml_utils.h"
 #include "xml_config.h"
 #include "module.h"
+#include "obix_request.h"
+#include "xml_storage.h"
+#include "server.h"
 
-static const char *testDevice = "<obj name=\"modTest\" href=\"/obix/modTest\"
+static const char *doc = "<?xml version=\"1.0\"?>"
+"<obj href=\"/obix/deviceRoot/test\" name=\"test device\">"
+"	<str href=\"test1\" val=\"test1\" />"
+"</obj>";
+
 
 void obix_module_destroy(struct obix_module *module)
 {
@@ -36,12 +43,12 @@ int mod_test_invoke(const struct obix_module *module, const obix_request_t *requ
 	return 0;
 }
 
-int mod_test_write(const struct obix_module *module, obix_request_t *request, const char *uri, const xmlNode *params)
+int mod_test_write(const struct obix_module *module, const obix_request_t *request, const char *uri, const xmlNode *params)
 {
 	return 0;
 }
 
-int mod_test_read(const struct obix_module *module, obix_request_t *request, const char *uri)
+int mod_test_read(const struct obix_module *module, const obix_request_t *request, const char *uri)
 {
 	/**
 	 * test read
@@ -63,6 +70,22 @@ int obix_module_start(struct obix_module *module)
 	ops->obix_module_destroy = &obix_module_destroy;
 
 	module->funcs = ops;
+	
+	
+	xmlDoc *xmldoc = xmlReadMemory(doc, strlen(doc), NULL, NULL, 0);
+	xmlNode *node = xmlDocGetRootElement(xmldoc);
+	xmlChar *href = xml_valid_node_href(node, NULL);
+	xmlNode *returnNode;
+	int r;
 
+	if ((r = obix_server_device_add(node, &returnNode, href, 1)) != 0) {
+		log_error("Module %s failed to add device: %s", module->module_path, obix_server_error_msg(r).msgs);
+	}
+	
+	xmlFreeDoc(xmldoc);
+	
+	/**
+	 * test read
+	 */
 	return 0;
 }

@@ -181,6 +181,11 @@ static err_msg_t server_err_msg[] = {
 	}
 };
 
+err_msg_t obix_server_error_msg(int err_id)
+{
+	return server_err_msg[err_id];
+}
+
 static obix_server_postHandler obix_server_post_handler(const int id)
 {
 	obix_server_postHandler handler;
@@ -630,37 +635,26 @@ xmlNode *handlerError(obix_request_t *request, const char *overrideUri,
 }
 
 /**
- * Handles signUp operation. Adds new device data to the server.
+ * Abstracted signUp mechanism from handlerSignUp.
+ * In order to support server functionality from other mechanisms other
+ * than POST handlers, the bulk of server operations should be translated
+ * to their own functions.
  */
-xmlNode *handlerSignUp(obix_request_t *request, const char *overrideUri,
-					   xmlNode *input)
+int obix_server_device_add(xmlNode *deviceContract, xmlNode **out_node,
+							xmlChar *href, int privileged)
 {
-	xmlNode *inputCopy, *ref, *node, *pos;
-	xmlChar *href = NULL;
-	int ret, existed = 0;
+	xmlNode *inputCopy, *ref, *pos;
+	int ret = 0, existed = 0;
 	xmldb_dom_action_t action;
-	const char *uri;
-
-	uri = (overrideUri != NULL) ? overrideUri : request->request_decoded_uri;
-
-	if (!input) {
+	
+	*out_node = NULL;
+	
+	if (!deviceContract) {
 		ret = ERR_NO_INPUT;
 		goto failed;
 	}
 
-	if (!(href = xmlGetProp(input, BAD_CAST OBIX_ATTR_HREF))) {
-		ret = ERR_NO_HREF;
-		goto failed;
-	}
-
-	if (xml_is_valid_href(href) == 0 ||
-		xmlStrncmp(href, BAD_CAST OBIX_DEVICE_ROOT,
-				   OBIX_DEVICE_ROOT_LEN) != 0) {
-		ret = ERR_INVALID_HREF;
-		goto failed;
-	}
-
-	if (!(ref = xmldb_create_ref(OBIX_DEVICES, input, href, &existed))) {
+	if (!(ref = xmldb_create_ref(OBIX_DEVICES, deviceContract, href, &existed))) {
 		ret = ERR_NO_REF;
 		goto failed;
 	}
@@ -683,7 +677,7 @@ xmlNode *handlerSignUp(obix_request_t *request, const char *overrideUri,
 	 * cannot be deleted through a normal write request, but via
 	 * the signOff request
 	 */
-	xmlUnsetProp(input, BAD_CAST OBIX_ATTR_WRITABLE);
+	xmlUnsetProp(deviceContract, BAD_CAST OBIX_ATTR_WRITABLE);
 
 	/*
 	 * An extra copy of the input node can be avoided for the signUp
@@ -695,18 +689,17 @@ xmlNode *handlerSignUp(obix_request_t *request, const char *overrideUri,
 	 * To conform with the behaviour of the read and write operations,
 	 * the copy is preserved here.
 	 */
-	if (!(inputCopy = xml_copy(input, XML_COPY_EXCLUDE_COMMENTS))) {
+	if (!(inputCopy = xml_copy(deviceContract, XML_COPY_EXCLUDE_COMMENTS))) {
 		ret = ERR_NO_MEM;
 		goto copy_failed;
 	}
-
 	/*
 	 * Always enforce sanity checks for all contracts registered regardless
 	 * of from clients or privileged adapters. However, create any missing
 	 * ancestors if they are from privileged adapters.
 	 */
 	action = DOM_NOTIFY_WATCHES | DOM_CHECK_SANITY;
-	if (is_privileged_mode(request) == 1) {
+	if (privileged == 1) {
 		action |= DOM_CREATE_ANCESTORS;
 	}
 
@@ -716,7 +709,6 @@ xmlNode *handlerSignUp(obix_request_t *request, const char *overrideUri,
 	}
 
 	/* Fall through */
-
 out:
 	/*
 	 * The input document have had any absolute href set to relative
@@ -726,7 +718,7 @@ out:
 	 * where the registered devices are. To this end, each direct
 	 * children of the copied node would need to be traversed.
 	 */
-	for (pos = input->children; pos; pos = pos->next) {
+	for (pos = deviceContract->children; pos; pos = pos->next) {
 		if (pos->type != XML_ELEMENT_NODE) {
 			continue;
 		}
@@ -734,12 +726,8 @@ out:
 		xmldb_set_relative_href(pos);
 	}
 
-	if (href) {
-		xmlFree(href);
-	}
-
-	return input;
-
+	*out_node = deviceContract;
+	return ret;
 put_failed:
 	xmlFreeNode(inputCopy);
 
@@ -747,15 +735,53 @@ copy_failed:
 	xmldb_delete_node(ref, 0);
 
 failed:
-	log_error("SignUp \"%s\" : %s", ((href) ? (char *)href :
+	return ret;
+}
+
+/**
+ * Handles signUp operation. Adds new device data to the server.
+ */
+xmlNode *handlerSignUp(obix_request_t *request, const char *overrideUri,
+					   xmlNode *input)
+{
+	const char *uri;
+	xmlNode *contract, *node;
+	xmlChar *href = NULL;
+	int ret;
+	
+	uri = (overrideUri != NULL) ? overrideUri : request->request_decoded_uri;
+
+	if (!(href = xmlGetProp(input, BAD_CAST OBIX_ATTR_HREF))) {
+		ret = ERR_NO_HREF;
+		goto failed;
+	}
+
+	if (xml_is_valid_href(href) == 0 ||
+		xmlStrncmp(href, BAD_CAST OBIX_DEVICE_ROOT,
+				   OBIX_DEVICE_ROOT_LEN) != 0) {
+		ret = ERR_INVALID_HREF;
+		goto failed;
+	}
+
+	if ((ret = obix_server_device_add(input, &contract, 
+			href, is_privileged_mode(request))) < 0) {
+		goto failed;
+	}
+
+	node = contract;
+	/* Fall through */
+failed:
+	if (ret != 0) {
+		log_error("SignUp \"%s\" : %s", ((href) ? (char *)href :
 					"(No Href got from Device Contract)"), server_err_msg[ret].msgs);
 
-	node = obix_server_generate_error(uri, server_err_msg[ret].type,
-									  "SignUp", server_err_msg[ret].msgs);
-
+		node = obix_server_generate_error(uri, server_err_msg[ret].type,
+										"SignUp", server_err_msg[ret].msgs);
+	}
+	
 	if (href) {
 		xmlFree(href);
 	}
-
+	
 	return node;
 }
