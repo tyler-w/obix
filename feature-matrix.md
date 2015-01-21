@@ -310,7 +310,7 @@ The core contract library describes some fundamental objects in which the server
 - [ ] obix:Weekday (§12.3)
 - [ ] obix:Month (§12.4)
 - [ ] obix:Units (§12.5)
-- 
+
 ## Watches (§12)
 
 The watch subsystem facilitates access to real-time information by informing the clients immediately of any change to a value in the oBIX server.
