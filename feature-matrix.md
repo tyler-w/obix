@@ -6,7 +6,7 @@ The document is comprised of a feature list of <x> features:
 
 * Object Model
 
-## Object Model
+## Object Model (§4)
 
 The oBIX object model describes oBIX objects that are fundamental to the machine-to-machine communication, and consist of a fixed set of object types that must be understood and implemented by the server.
 
@@ -87,8 +87,6 @@ The `in` attribute can be used to pass an input argument when subscribing to the
 ## Value types
 
 Value types **must** have a `val` attribute, **or** be set to null with `null=true`.  Both `val` and `null` **must** not coexist on the same object.
-
-Value types **must** not have children.
 
 ### `obix:bool` (§4.2)
 The bool object represents a boolean condition of either true or false. Its val attribute maps to `xs:boolean` defaulting to `false`. The literal value of a bool MUST be “true” or “false” (the literals `1` and `0` are not allowed).
@@ -281,3 +279,61 @@ Facets are fully implemented for each object in the oBIX server when the server'
   - [ ] obix:reltime
   - [ ] obix:date
   - [ ] obix:time
+
+
+## oBIX Networking (§11)
+
+**Criterion**
+
+Each feature in this section conforms **in its entirety** to the description found in the specification document.  In the interest of conciseness, The specification's contents is not repeated here.
+
+- [ ] Request/Response (§11.1)
+- [ ] Read (§11.1.1)
+- [ ] Write (§11.1.2)
+- [ ] Invoke (§11.1.3)
+
+- [ ] Errors (§11.2)
+- [ ] Lobby Contract (§11.3)
+- [ ] About Contract (§11.3)
+
+### Batch mechanism (§11.5)
+- [ ] Batch Read
+- [ ] Batch Write
+- [ ] Batch Invoke
+
+## Core Contract Library (§12)
+
+The core contract library describes some fundamental objects in which the server **must** obey.  They are predefined, and available for all clients to use.
+
+- [ ] obix:Nil (§12.1)
+- [ ] obix:Range (§12.2)
+- [ ] obix:Weekday (§12.3)
+- [ ] obix:Month (§12.4)
+- [ ] obix:Units (§12.5)
+- 
+## Watches (§12)
+
+The watch subsystem facilitates access to real-time information by informing the clients immediately of any change to a value in the oBIX server.
+
+- [ ] Watch Service (§13.1)
+- [ ] Watch Object (§13.2)
+- [ ] Watch Components
+ - [ ] Watch.add (§13.2.1)
+ - [ ] Watch.remove (§13.2.2)
+ - [ ] Watch.pollChanges (§13.2.3)
+ - [ ] Watch.pollRefresh (§13.2.4)
+ - [ ] Watch.lease (§13.2.5)
+ - [ ] Watch.delete (§13.2.6)
+- [ ] Watch Depth (§13.3)
+- [ ] Feeds (§13.4)
+
+## Points
+
+Points are used in sensor systems to map ranges of values to set points, which trigger events.  This section is unused.
+
+## History (§15)
+
+History subsystem provides clients access to an oBIX Object's value over a period of time.
+
+- [ ] History Object (§15.1)
+- [ ] History Queries (§15.2)
