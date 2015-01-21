@@ -106,47 +106,64 @@ The `real` type represents a floating point number. Its `val` attribute maps to 
 - [ ] `xs:double` integrity checking and enforcement
 
 ### `obix:str`
-The `str` type represents a string of Unicode characters. Its `val` attribute maps to `xs:string` with a default of the empty string. 
+The `str` type represents a string of Unicode characters. Its `val` attribute
+maps to `xs:string` with a default of the empty string. 
 
 - [ ] Read
 - [ ] Write
 - [ ] `xs:string` integrity checking and enforcement
 
 ### `obix:enum`
-The `enum` type is used to represent a value which must match a finite set of values. The finite value set is called the range. The `val` attribute of an `enum` is represented as a string key using `xs:string` Defaults to null. The range of an `enum` is declared via facets using the `range` attribute.
+The `enum` type is used to represent a value which must match a finite set of
+values. The finite value set is called the range. The `val` attribute of an 
+`enum` is represented as a string key using `xs:string` Defaults to null. 
+The range of an `enum` is declared via facets using the `range` attribute.
 
 - [ ] Read
 - [ ] Write
 - [ ] `xs:string` integrity checking and enforcement
 
 ### `obix:abstime`
-The `abstime` type is used to represent an absolute point in time. Its `val` attribute maps to `xs:dateTime`, with the exception that the **timezone is required**. Defaults to null.
+The `abstime` type is used to represent an absolute point in time. Its `val` 
+attribute maps to `xs:dateTime`, with the exception that the **timezone is 
+required**. Defaults to null.
 
 - [ ] Read
 - [ ] Write
 - [ ] `xs:dateTime` integrity checking and enforcement
 
 ### `obix:reltime`
-The `reltime` type is used to represent a relative duration of time, or a timespan. Its `val` attribute maps to `xs:duration` with a default of `0sec`.
+The `reltime` type is used to represent a relative duration of time, or a 
+timespan. Its `val` attribute maps to `xs:duration` with a default of `0sec`.
 - [ ] Read
 - [ ] Write
 - [ ] `xs:duration` integrity checking and enforcement
 
 ### `obix:date`
-The date type is used to represent a day in time as a day, month, and year. Its `val` attribute maps to `xs:date`.
+The date type is used to represent a day in time as a day, month, and year. 
+Its `val` attribute maps to `xs:date`.
+
 - [ ] Read
 - [ ] Write
 - [ ] `xs:date` integrity checking and enforcement
 
 ### `obix:time`
-The `time` type is used to represent a time of day in hours, minutes, and seconds. Its `val` attribute maps to `xs:time`.
-Time values in oBIX **MUST** omit the timezone offset and MUST NOT use the trailing “Z”. Only the `tz` attribute SHOULD be used to associate the time with a timezone. Time objects default to null.
+The `time` type is used to represent a time of day in hours, minutes, and 
+seconds. Its `val` attribute maps to `xs:time`.
+
+Time values in oBIX **MUST** omit the timezone offset and MUST NOT use the 
+trailing “Z”. Only the `tz` attribute SHOULD be used to associate the time 
+with a timezone. Time objects default to null.
+
 - [ ] Read
 - [ ] Write
 - [ ] `xs:time` integrity checking and enforcement
 
 ### `obix:uri`
-The uri type is used to store a URI reference. Unlike a plain old str, a uri has a restricted lexical space as defined by RFC 3986 and XML Schema `xs:anyURI` type.
+The uri type is used to store a URI reference. Unlike a plain old str, a uri 
+has a restricted lexical space as defined by RFC 3986 and XML Schema `xs:anyURI` 
+type.
+
 - [ ] Read
 - [ ] Write
 - [ ] `xs:anyURI` integrity checking and enforcement
