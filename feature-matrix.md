@@ -177,6 +177,7 @@ type.
 Facets are traits and constraints placed on an object type that depict its range of valid values that are inside of the normal XML schema definitions.  Both facets and XML schema validation **must** pass before the object's value is considered valid.  Facets are inserted onto objects via XML attributes.
 
 **Criterion**
+
 Facets are fully implemented for each object in the oBIX server when the server's sanity check obeys any facet (and default facet) installed on an oBIX object when accepting an `obix:write` for that object.
 
 - [ ] displayName (§4.18.1)
