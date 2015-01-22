@@ -27,7 +27,7 @@ Complex object items may be marked as complete only if:
 
 Reference, or "complex" types do not have a `val` attribute, and do not carry a value themselves; rather, they are mechanisms and containers that support the manipulation and categorization of value objects.
 
-### `obix:obj` (§4.1)
+#### `obix:obj` (§4.1)
 
 `obj` is the root oBIX object.  Every type derives from `obj`.
 
@@ -44,7 +44,7 @@ Reference, or "complex" types do not have a `val` attribute, and do not carry a 
   - [ ] @status
 - [ ] Integrity Checking and enforcement
 
-### `obix:list` (§4.12)
+#### `obix:list` (§4.12)
 
 `obix:list` is a collection element, and supports grouping of lists of nodes.
 
@@ -55,7 +55,7 @@ Reference, or "complex" types do not have a `val` attribute, and do not carry a 
   - [ ] @max
 - [ ] Integrity Checking and enforcement
 
-### `obix:op` (§4.15)
+#### `obix:op` (§4.15)
 
 `obix:op` is the operation mechanism:  It enables the oBIX server to be able to support procedures.  It should be the only node that supports the `obix:invoke` operation.
 
@@ -66,18 +66,18 @@ Reference, or "complex" types do not have a `val` attribute, and do not carry a 
 - [ ] Invoke
 - [ ] Integrity Checking and enforcement
 
-### `obix:ref` (§4.13)
+#### `obix:ref` (§4.13)
 `obix:ref` nodes provide an anchor mechanism to refer clients to other locations in the tree, possibly even externally.
 
 - [ ] Read
 - [ ] Write
 
-### `obix:err` (§4.14)
+#### `obix:err` (§4.14)
 `obix:err` contracts provide an error informing mechanism to inform clients of any errors encountered for a request it may perform.  You cannot write `obix:err` contracts to an oBIX server.
 
 - [ ] Read
 
-### `obix:feed` (§4.16)
+#### `obix:feed` (§4.16)
 The `feed` object is used to define a topic for a feed of events. Feeds are used with watches to subscribe
 to a stream of events such as alarms. A feed SHOULD specify the event type it fires via the of attribute.
 The `in` attribute can be used to pass an input argument when subscribing to the feed (a filter for example).
@@ -86,21 +86,21 @@ The `in` attribute can be used to pass an input argument when subscribing to the
 
 Value types **must** have a `val` attribute, **or** be set to null with `null=true`.  Both `val` and `null` **must** not coexist on the same object.
 
-### `obix:bool` (§4.2)
+#### `obix:bool` (§4.2)
 The bool object represents a boolean condition of either true or false. Its val attribute maps to `xs:boolean` defaulting to `false`. The literal value of a bool MUST be “true” or “false” (the literals `1` and `0` are not allowed).
 
 - [ ] Read
 - [ ] Write
 - [ ] `xs:boolean` integrity checking and enforcement
 
-### `obix:int` (§4.3)
+#### `obix:int` (§4.3)
 The `int` type represents an integer number. Its `val` attribute maps to `xs:long` as a 64-bit integer with a default of `0`.
 
 - [ ] Read
 - [ ] Write
 - [ ] `xs:long` integrity checking and enforcement
 
-### `obix:real` (§4.4)
+#### `obix:real` (§4.4)
 
 The `real` type represents a floating point number. Its `val` attribute maps to `xs:double` as a IEEE 64-bit floating point number with a default of `0`.
 
@@ -108,7 +108,7 @@ The `real` type represents a floating point number. Its `val` attribute maps to 
 - [ ] Write
 - [ ] `xs:double` integrity checking and enforcement
 
-### `obix:str` (§4.5)
+#### `obix:str` (§4.5)
 The `str` type represents a string of Unicode characters. Its `val` attribute
 maps to `xs:string` with a default of the empty string. 
 
@@ -116,7 +116,7 @@ maps to `xs:string` with a default of the empty string.
 - [ ] Write
 - [ ] `xs:string` integrity checking and enforcement
 
-### `obix:enum` (§4.6)
+#### `obix:enum` (§4.6)
 The `enum` type is used to represent a value which must match a finite set of
 values. The finite value set is called the range. The `val` attribute of an 
 `enum` is represented as a string key using `xs:string` Defaults to null. 
@@ -126,7 +126,7 @@ The range of an `enum` is declared via facets using the `range` attribute.
 - [ ] Write
 - [ ] `xs:string` integrity checking and enforcement
 
-### `obix:abstime` (§4.7)
+#### `obix:abstime` (§4.7)
 The `abstime` type is used to represent an absolute point in time. Its `val` 
 attribute maps to `xs:dateTime`, with the exception that the **timezone is 
 required**. Defaults to null.
@@ -135,14 +135,14 @@ required**. Defaults to null.
 - [ ] Write
 - [ ] `xs:dateTime` integrity checking and enforcement
 
-### `obix:reltime` (§4.8)
+#### `obix:reltime` (§4.8)
 The `reltime` type is used to represent a relative duration of time, or a 
 timespan. Its `val` attribute maps to `xs:duration` with a default of `0sec`.
 - [ ] Read
 - [ ] Write
 - [ ] `xs:duration` integrity checking and enforcement
 
-### `obix:date` (§4.9)
+#### `obix:date` (§4.9)
 The date type is used to represent a day in time as a day, month, and year. 
 Its `val` attribute maps to `xs:date`.
 
@@ -150,7 +150,7 @@ Its `val` attribute maps to `xs:date`.
 - [ ] Write
 - [ ] `xs:date` integrity checking and enforcement
 
-### `obix:time` (§4.10)
+#### `obix:time` (§4.10)
 The `time` type is used to represent a time of day in hours, minutes, and 
 seconds. Its `val` attribute maps to `xs:time`.
 
@@ -162,7 +162,7 @@ with a timezone. Time objects default to null.
 - [ ] Write
 - [ ] `xs:time` integrity checking and enforcement
 
-### `obix:uri` (§4.11)
+#### `obix:uri` (§4.11)
 The uri type is used to store a URI reference. Unlike a plain old str, a uri 
 has a restricted lexical space as defined by RFC 3986 and XML Schema `xs:anyURI` 
 type.
@@ -294,7 +294,7 @@ Each feature in this section conforms **in its entirety** to the description fou
 - [ ] Lobby Contract (§11.3)
 - [ ] About Contract (§11.3)
 
-### Batch mechanism (§11.5)
+#### Batch mechanism (§11.5)
 - [ ] Batch Read
 - [ ] Batch Write
 - [ ] Batch Invoke
