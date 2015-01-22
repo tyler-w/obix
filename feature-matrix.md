@@ -2,9 +2,7 @@
 
 The purpose of this document is to outline the implemented features inside the oBIX server in line with the [oBIX specification 1.1](https://www.oasis-open.org/committees/download.php/38212/oBIX-1-1-spec-wd06.pdf) provided by OASIS.
 
-The document is comprised of a feature list of <x> features:
-
-* Object Model
+Items checked in this list have been implemented *in their entirety* according to the full extent of the specification.  Items in this list that have not, or partially implemented **should not** be acknowledged in this list, notwithstanding individual criterion defined for each subsection.
 
 ## Object Model (§4)
 
